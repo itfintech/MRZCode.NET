@@ -12,19 +12,21 @@ namespace MRZCodeParser
             this.lines = lines;
         }
 
-        internal CodeType DetectType()
+        internal HandlingType DetectType()
         {
-            CodeType type = lines.Count() == 3 && lines.First().Length == 30
-                ? CodeType.TD1
+            HandlingType type = lines.Count() == 3 && lines.First().Length == 30
+                ? lines.First().StartsWith("I<BGD")
+                    ? HandlingType.TD1Bangladesh
+                    : HandlingType.TD1
                 : lines.First().Length == 44 && lines.Count() == 2
                     ? lines.First()[0] == 'P'
-                        ? CodeType.TD3
-                        : CodeType.MRVA
+                        ? HandlingType.TD3
+                        : HandlingType.MRVA
                     : lines.First().Length == 36 && lines.Count() == 2
                         ? lines.First()[0] == 'V'
-                            ? CodeType.MRVB
-                            : CodeType.TD2
-                        : CodeType.UNKNOWN;
+                            ? HandlingType.MRVB
+                            : HandlingType.TD2
+                        : HandlingType.UNKNOWN;
 
             return type;
         }

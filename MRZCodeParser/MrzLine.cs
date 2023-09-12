@@ -10,7 +10,7 @@ namespace MRZCodeParser
 
         public int Length => Value?.Length ?? 0;
 
-        public FieldsCollection Fields
+        public virtual FieldsCollection Fields
         {
             get
             {
