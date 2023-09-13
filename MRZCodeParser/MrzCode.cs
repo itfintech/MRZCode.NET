@@ -63,15 +63,16 @@ namespace MRZCodeParser
             var lines = new LineSplitter(code)
                 .Split()
                 .ToList();
-            var type = new CodeTypeDetector(lines).DetectType();
+            var handlingType = new CodeTypeDetector(lines).DetectType();
 
-            return type switch
+            return handlingType switch
             {
-                CodeType.TD1 => new TD1MrzCode(lines),
-                CodeType.TD2 => new TD2MrzCode(lines),
-                CodeType.TD3 => new TD3MrzCode(lines),
-                CodeType.MRVA => new MRVAMrzCode(lines),
-                CodeType.MRVB => new MRVBMrzCode(lines),
+                HandlingType.TD1 => new TD1MrzCode(lines),
+                HandlingType.TD1Bangladesh => new TD1BangladeshMrzCode(lines),
+                HandlingType.TD2 => new TD2MrzCode(lines),
+                HandlingType.TD3 => new TD3MrzCode(lines),
+                HandlingType.MRVA => new MRVAMrzCode(lines),
+                HandlingType.MRVB => new MRVBMrzCode(lines),
                 _ => new UnknownMrzCode(lines)
             };
         }
