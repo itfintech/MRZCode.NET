@@ -13,7 +13,7 @@ namespace MRZCodeParser.CodeTypes
 
         public override IEnumerable<MrzLine> Lines => new MrzLine[]
         {
-            new TD1BanghadeshFirstLine(RawLines.First()),
+            new TD1BangladeshFirstLine(RawLines.First()),
             new TD1SecondLine(RawLines.ElementAt(1)),
             new TD1ThirdLine(RawLines.Last())
         };

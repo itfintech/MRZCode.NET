@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace MRZCodeParser.CodeTypes
 {
-    internal class TD1BanghadeshFirstLine : MrzLine
+    internal class TD1BangladeshFirstLine : MrzLine
     {
-        internal TD1BanghadeshFirstLine(string value) : base(value)
+        internal TD1BangladeshFirstLine(string value) : base(value)
         {
         }
 
