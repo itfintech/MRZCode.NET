@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MRZCodeParser
@@ -16,6 +17,8 @@ namespace MRZCodeParser
                 MappedSumValues[_charset[i]] = i;
             }
             MappedSumValues['<'] = 0;
+            MappedSumValues[' '] = 0;
+            MappedSumValues[','] = 0;
         }
 
         public static bool Validate(MrzCode mrz)
@@ -70,6 +73,13 @@ namespace MRZCodeParser
             calculatedCheckSum += CalculateSum(secondMrzLine.Value[13..20], 10);
             calculatedCheckSum += CalculateSum(secondMrzLine.Value[21..35], 17);
             var mrzCheckSumIsValid = calculatedCheckSum % 10 == mrzCheckDigit;
+
+
+            // temp fix for MDA BO 01001 ids with no expiry date
+            if (mrz[FieldType.CountryCode] == "MDA" &&  string.IsNullOrEmpty(mrz[FieldType.ExpiryDate]))
+            {
+                return isDocumentNumberValid && isBirthDateValid && isExpiryDateValid;
+            }
 
             return isDocumentNumberValid && isBirthDateValid && isExpiryDateValid && mrzCheckSumIsValid;
         }
