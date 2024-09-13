@@ -16,6 +16,8 @@ namespace MRZCodeParser
                 MappedSumValues[_charset[i]] = i;
             }
             MappedSumValues['<'] = 0;
+            MappedSumValues[' '] = 0;
+            MappedSumValues[','] = 0;
         }
 
         public static bool Validate(MrzCode mrz)
@@ -66,10 +68,20 @@ namespace MRZCodeParser
             var secondMrzLine = mrz.Lines.Last();
             var mrzCheckDigit = (int)char.GetNumericValue(mrz[FieldType.OverallCheckDigit][0]);
             var calculatedCheckSum = 0;
-            calculatedCheckSum += CalculateSum(secondMrzLine.Value[..10]);
-            calculatedCheckSum += CalculateSum(secondMrzLine.Value[13..20], 10);
-            calculatedCheckSum += CalculateSum(secondMrzLine.Value[21..35], 17);
+
+            // MDA TD2 has a different MRZ checksum calculation
+            if (mrz[FieldType.CountryCode] != "MDA" || !string.IsNullOrEmpty(mrz[FieldType.ExpiryDate]))
+            {
+                calculatedCheckSum += CalculateSum(secondMrzLine.Value[..10]);
+                calculatedCheckSum += CalculateSum(secondMrzLine.Value[13..20], 10);
+                calculatedCheckSum += CalculateSum(secondMrzLine.Value[21..35], 17);
+            }
+            else
+            {
+                calculatedCheckSum += CalculateSum(secondMrzLine.Value[..35]);
+            }
             var mrzCheckSumIsValid = calculatedCheckSum % 10 == mrzCheckDigit;
+
 
             return isDocumentNumberValid && isBirthDateValid && isExpiryDateValid && mrzCheckSumIsValid;
         }
